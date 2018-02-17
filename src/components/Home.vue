@@ -1,7 +1,6 @@
 <template>
 <div>
   <h1>upbit</h1>
-  <button class="btn" @click="getdata">get</button>
   <button class="btn" @click="stop">stop</button>
 </div>
 </template>
@@ -19,16 +18,12 @@ export default {
   },
   methods: {
     stop() {
-      sockjs.close()
-  },
+            sockjs.close()
+            console.log("Socket closed")
+    },
     getdata() {
-      
-  }
-  },
-  created() {
-    console.log('get')
       sockjs.onopen = function () {
-        console.log("Socket open")
+        console.log("Socket open");
         var s = [
           {
             ticket: "ram macbook"
@@ -49,9 +44,13 @@ export default {
         ];
         sockjs.send(JSON.stringify(s));
         sockjs.onmessage = function (e) {
-          console.log(JSON.parse(e.data))
-          sockjs.close()
-        }
-      }
+          console.log(JSON.parse(e.data));
+        };
+      };
+      
+    }
+  },
+  created() {
+   this.getdata() 
   }
 }</script>

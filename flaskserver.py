@@ -18,3 +18,4 @@ def get_data():
     #     encoding = btcUrl.info().get_content_charset('utf-8')    
     #     upbitBtc=json.loads(btcData.decode(encoding))[0]['tradePrice']
     return 'data'
+
