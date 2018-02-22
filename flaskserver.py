@@ -281,6 +281,27 @@ def add_article():
         'password':request.json['password']})
     return str(articleId)
 
+@app.route('/api/article/addcom/<id>',methods=['PUT'])
+def add_article_com(id):
+    coll = mongo.db.article
+    com = coll.find_one({'_id':ObjectId(id)})
+    comlist = []
+    if 'comlist' in com :
+        comlist=com['comlist']
+        comlist.append(request.json['comData'])
+    else:
+        comlist.append(request.json['comData'])
+    coll.update_one(
+        {"_id": ObjectId(id)},
+        {
+            "$set":{
+            "comlist":comlist
+            }
+        }
+    )
+    return 'ok'
+
+
 if __name__=='__main__':
     app.run(debug=True)
 
