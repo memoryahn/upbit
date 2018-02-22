@@ -9,7 +9,7 @@
         <div style="flex:1">Name : {{ article.user_name }}</div>
         <div style="flex:2">Date : {{ article.last_update }}</div>
     </div>
-    <div style="border:1px solid lightgray">
+    <div style="min-height:200px;border:1px solid lightgray">
         <p>{{ article.artbody }}</p>
     </div>
     <div align="center" style="margin-top:20px">

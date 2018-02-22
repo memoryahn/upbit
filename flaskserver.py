@@ -301,6 +301,17 @@ def add_article_com(id):
     )
     return 'ok'
 
+@app.route('/api/gif/slack/<count>',methods=['GET'])
+def get_gif_slack(count):                                           
+    gifcoll = mongo.db.gifcoll 
+    output = []
+    pageSize = int(count)       
+    for s in gifcoll.find().sort([('_id',-1)]).limit(pageSize):
+        output.append(s)
+    for entry in output:
+        entry['_id'] = str(entry['_id'])
+    return jsonify(output)
+
 
 if __name__=='__main__':
     app.run(debug=True)
