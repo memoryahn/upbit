@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 import urllib.request
 import json
+from bson.objectid import ObjectId
+
 from flask_cors import CORS
 from datetime import datetime
 
@@ -11,7 +13,7 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 
-app.config['MONGO_DBNAME'] = 'upbit'
+app.config['MONGO_DBNAME'] = 'gif'
 app.config['MONGO_HOST'] = 'mongodb://220.230.124.148:27017'
 app.config['MONGO_PORT'] = '27017'
 
@@ -171,6 +173,113 @@ def get_open():
         data.append(result)
     return jsonify(data)
 
+@app.route('/api/gif/page/<page>',methods=['GET'])
+def get_gif_count(page):                                           
+    gifcoll = mongo.db.gifcoll 
+    output = []
+    pageSize = 20       
+    skips = (int(page)-1)*pageSize
+    for s in gifcoll.find().sort([('_id',-1)]).skip(skips).limit(pageSize):
+        output.append(s)
+    for entry in output:
+        entry['_id'] = str(entry['_id'])
+    return jsonify(output)
+
+@app.route('/api/gif/id/<id>',methods=['GET'])
+def gif(id):
+    gifcoll=mongo.db.gifcoll
+    gifone = gifcoll.find_one({'_id':ObjectId(id)})
+    gifone['_id']=str(gifone['_id'])
+    return jsonify(gifone)
+
+@app.route('/api/article/page/<page>',methods=['GET'])
+def get_article_count(page):                                           
+    artcoll = mongo.db.article 
+    output = []
+    pageSize = 20       
+    skips = (int(page)-1)*pageSize
+    for s in artcoll.find().sort([('_id',-1)]).skip(skips).limit(pageSize):
+        output.append(s)
+    for entry in output:
+        entry['_id'] = str(entry['_id'])
+    return jsonify(output)
+
+@app.route('/api/article/id/<id>',methods=['GET'])
+def article(id):
+    artcoll=mongo.db.article
+    artone = artcoll.find_one({'_id':ObjectId(id)})
+    artone['_id']=str(artone['_id'])
+    return jsonify(artone)
+
+@app.route('/api/gif/comid/<id>',methods=['POST'])
+def comment(id):
+    comcoll = mongo.db.comcoll
+    articleId = id
+    checkUser = request.json['checkUser']
+    name = request.json['name']
+    userId = request.json['userId']
+    password = request.json['password']
+    body = request.json['body']
+    comId = comcoll.insert({'name':name,'articleId':id,'userId':userId,'body':body,
+    'password':password})
+    print(comId)
+    return str(comId)
+
+@app.route('/api/gif/addcom/<id>',methods=['PUT'])
+def add_com(id):
+    coll = mongo.db.gifcoll
+    com = coll.find_one({'_id':ObjectId(id)})
+    comlist = []
+    if 'comlist' in com :
+        comlist=com['comlist']
+        comlist.append(request.json['comData'])
+    else:
+        comlist.append(request.json['comData'])
+    coll.update_one(
+        {"_id": ObjectId(id)},
+        {
+            "$set":{
+            "comlist":comlist
+            }
+        }
+    )
+    return 'ok'
+
+@app.route('/api/gif/views/<id>',methods=['PUT'])
+def add_view_count(id):
+    coll = mongo.db.gifcoll
+    # print('request:'+request.views)
+    checkCount = coll.find_one({'_id':ObjectId(id)})
+    addCount = int(checkCount['views']) + 1
+    coll.update_one(
+        {"_id": ObjectId(id)},
+        {
+            "$set":{
+            "views":addCount
+        }
+        }
+    )
+    return 'ok'
+@app.route('/api/article/new',methods=['POST'])
+def add_article():
+    artcoll = mongo.db.article
+    beforeCount = artcoll.find().sort([('_id',-1)]).limit(1)
+    count=1
+    if beforeCount != None:
+        for i in beforeCount:
+            count = int(i['articleNumber']) + 1
+    articleId = artcoll.insert({
+        'articleNumber':count,
+        'title':request.json['title'],
+        'artbody':request.json['artbody'],
+        'views':request.json['views'],
+        'like':request.json['like'],
+        'bad':request.json['bad'],
+        'user_id':request.json['user_id'],
+        'user_name':request.json['user_name'],
+        'last_update':datetime.now(),
+        'password':request.json['password']})
+    return str(articleId)
 
 if __name__=='__main__':
     app.run(debug=True)

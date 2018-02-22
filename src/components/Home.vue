@@ -1,5 +1,5 @@
 <template>
-<div style="padding:20px">
+<div style="padding:1em">
 <div align="center">
   <div class="flex" style="width:700px" >
     <div class="info">총코인 : 35</div>
@@ -8,26 +8,27 @@
   </div>
   <div style="width:700px;font-size:12px">
     <div class="flex">
-      <div class="title" style="width:20%">코드</div>
-      <div class="title" style="width:10%">이름</div>
-      <div class="title" style="width:10%">OPEN 가격</div>
-      <div class="title" style="width:10%">현재 가격</div>
-      <div class="title" style="width:10%">상승률</div>
-      <div class="title" style="width:10%">최고</div>
-      <div class="title" style="width:10%">최저</div>
-      <div class="title" style="width:10%">순위</div>
+      <div class="title" style="flex:2">코드</div>
+      <div class="title" style="flex:1">이름</div>
+      <div class="title" style="flex:1">OPEN 가격</div>
+      <div class="title" style="flex:1">현재 가격</div>
+      <div class="title" style="flex:1">상승률</div>
+      <div class="title" style="flex:1">최고</div>
+      <div class="title" style="flex:1">최저</div>
+      <div class="title" style="flex:1">순위</div>
     </div>
-    <div class="flex" style="font-size:10px" v-for="(d,i) in data" :key="i">
-      <div class="data" style="width:20%" align="left">{{ d.name }}</div>
-      <div class="data" style="width:10%" >{{ d.code }}</div>
-      <div class="data" style="width:10%" align="right">{{ comma(d.open) }}</div>
-      <div class="data" style="width:10%" align="right">{{ comma(d.tradePrice) }}</div>
-      <div class="data" style="width:10%;color:red;" align="left" v-if="d.climeRate >= 0" >▲ {{ d.climeRate }}%</div>
-      <div class="data" style="width:10%;color:blue;" align="left" v-if="d.climeRate < 0" >▼ {{ d.climeRate }}%</div>
-      <div class="data" style="width:10%" >▲ +15%</div>
-      <div class="data" style="width:10%" >▼ -10%</div>
-      <div class="data" style="width:10%;color:red;" v-if="d.climeRate >= 5" >( {{ d.rate }} )</div>
-      <div class="data" style="width:10%;color:blue;" v-if="d.climeRate < 5" >( {{ d.rate }} )</div>
+    <div id="dd" class="flex" style="font-size:10px" v-for="(d,i) in data" :key="i">
+      <div class="data" style="flex:2;color:red" align="left" v-if="i<=14">{{ d.name }}</div>
+      <div class="data" style="flex:2" align="left" v-if="i>14">{{ d.name }}</div>
+      <div class="data" style="flex:1" >{{ d.code }}</div>
+      <div class="data" style="flex:1" align="right">{{ comma(d.open) }}</div>
+      <div class="data" style="flex:1" align="right">{{ comma(d.tradePrice) }}</div>
+      <div class="data" style="flex:1;color:red;" align="left" v-if="d.climeRate >= 0" >▲ {{ d.climeRate }}%</div>
+      <div class="data" style="flex:1;color:blue;" align="left" v-if="d.climeRate < 0" >▼ {{ d.climeRate }}%</div>
+      <div class="data" style="flex:1" >▲ +15%</div>
+      <div class="data" style="flex:1" >▼ -10%</div>
+      <div class="data" style="flex:1;color:red;" v-if="d.climeRate >= 5" >( {{ d.rate }} )</div>
+      <div class="data" style="flex:1;color:blue;" v-if="d.climeRate < 5" >( {{ d.rate }} )</div>
     </div>
   </div>
 </div> 
@@ -135,5 +136,8 @@ export default {
 .data {
   border: 1px solid lightgray;
   padding: 5px
+}
+#dd:nth-child(odd){
+  background: #eee;
 }
 </style>

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "firebase": "^4.10.0",
+    "firebaseui": "^2.6.1",
     "sockjs": "^0.3.19",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
