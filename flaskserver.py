@@ -279,7 +279,7 @@ def add_com(id):
     return 'ok'
 
 @app.route('/api/gif/views/<id>',methods=['PUT'])
-def add_view_count(id):
+def add_gif_view_count(id):
     coll = mongo.db.gifcoll
     # print('request:'+request.views)
     checkCount = coll.find_one({'_id':ObjectId(id)})
@@ -293,6 +293,23 @@ def add_view_count(id):
         }
     )
     return 'ok'
+
+@app.route('/api/article/views/<id>',methods=['PUT'])
+def add_article_view_count(id):
+    artcoll = mongo.db.article
+    # print('request:'+request.views)
+    checkCount = artcoll.find_one({'_id':ObjectId(id)})
+    addCount = int(checkCount['views']) + 1
+    artcoll.update_one(
+        {"_id": ObjectId(id)},
+        {
+            "$set":{
+            "views":addCount
+        }
+        }
+    )
+    return 'ok'
+
 @app.route('/api/article/new',methods=['POST'])
 def add_article():
     artcoll = mongo.db.article

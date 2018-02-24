@@ -3,9 +3,9 @@
     <div class="flex" style="width:700px">
         <div @click="upbit">UPBIT</div>
         <div @click="gif">GIF</div>
-        <div @click="forum">FORUM</div>
-        <div style="flex-grow:3"></div>
-        <div @click="login">LOGIN</div>
+        <!-- <div @click="forum">FORUM</div> -->
+        <div style="flex-grow:5"></div>
+        <!-- <div @click="login">LOGIN</div> -->
     </div>    
 </div>
 </template>
@@ -46,5 +46,9 @@ export default {
     font-size:20px;
     flex:1;
     padding:10px
+}
+.flex div:hover {
+    cursor:context-menu;
+    color:black;
 }
 </style>

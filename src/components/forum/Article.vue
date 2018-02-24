@@ -7,7 +7,7 @@
     </div>
     <div class="flex">
         <div style="flex:1">Name : {{ article.user_name }}</div>
-        <div style="flex:2">Date : {{ article.last_update }}</div>
+        <div style="flex:2;font-size:12px">Date : {{ article.last_update }}</div>
     </div>
     <div style="min-height:200px;border:1px solid lightgray">
         <p>{{ article.artbody }}</p>

@@ -4,13 +4,14 @@ import router from './router'
 import { config } from './helpers/firebaseConfig'
 import firebase from 'firebase'
 import firebaseui from 'firebaseui'
-
+import { store } from './store/store'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   created() {
     firebase.initializeApp(config)
     firebase.auth().onAuthStateChanged((user)=>{

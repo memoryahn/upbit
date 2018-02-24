@@ -1,25 +1,28 @@
 <template>
 <div align="center">
-  <div class="flex" style="width:700px;margin-top:10px" >
-    <div class="info">총코인 : 35</div>
-    <div class="info">+3% 코인 : {{ count }}</div>
-    <div class="info">+ 코인 : {{ upcount }}</div>
+  <div class="flex" style="width:700px;margin-top:10px;font-size:12px" >
+    <div class="info" style="flex:1">총코인 : 35</div>
+    <div class="info" style="flex:1">+3% 코인 : {{ count }}</div>
+    <div class="info" style="flex:1">+ 코인 : {{ upcount }}</div>
+    <div style="flex:4"></div>
   </div>
   <div style="width:700px;font-size:12px">
     <div class="flex">
       <div class="title" style="flex:2">이름</div>
-      <div class="title" style="flex:0.5">코드</div>
-      <div class="title" style="flex:1">OPEN 가격</div>
+      <div class="title" style="flex:0.7">코드</div>
+      <div class="title" style="flex:1">7시 open가격</div>
       <div class="title" style="flex:1">현재 가격</div>
       <div class="title" style="flex:1">상승률</div>
       <div class="title" style="flex:1">최고</div>
       <div class="title" style="flex:1">최저</div>
       <div class="title" style="flex:0.5">순위</div>
     </div>
-    <div id="dd" class="flex" style="font-size:12px" v-for="(d,i) in data" :key="i">
+    <div id="dd" class="flex" style="font-size:12px" 
+    v-for="(d,i) in data" :key="i"
+    v-if="!loading">
       <div class="data" style="flex:2;color:red" align="left" v-if="i<=14">{{ d.name }}</div>
       <div class="data" style="flex:2" align="left" v-if="i>14">{{ d.name }}</div>
-      <div class="data" style="flex:0.5" >{{ d.code }}</div>
+      <div class="data" style="flex:0.7" >{{ d.code }}</div>
       <div class="data" style="flex:1" align="right">{{ comma(d.openingPrice) }}</div>
       <div class="data" style="flex:1" align="right">{{ comma(d.tradePrice) }}</div>
       <div class="data" style="flex:1;color:red;"  v-if="d.climeRate >= 0" >▲ {{ d.climeRate }}%</div>
@@ -30,6 +33,9 @@
       <div class="data" style="flex:0.5;color:red;" v-if="d.climeRate >= 3" >( {{ d.rate }} )</div>
       <div class="data" style="flex:0.5;color:blue;" v-if="d.climeRate < 3" >( {{ d.rate }} )</div>
     </div>
+      <div v-if="loading">
+        <h1>Loading</h1>
+      </div>
   </div>
 </div> 
 </template>
@@ -45,6 +51,11 @@ export default {
       data:{},
       count:0,
       upcount:0,
+    }
+  },
+  computed : {
+    loading(){
+      return this.$store.getters.loading
     }
   },
   methods: {
@@ -63,7 +74,7 @@ export default {
     },
     getdata() {
       axios.get(ip+'/api/open')
-    .then(response=>{
+      .then(response=>{
       console.log('connect')
       this.data=response.data
       this.count=0
@@ -79,18 +90,20 @@ export default {
             this.upcount++
           }
       }
-      
       this.data.sort(function(b, a){return a.climeRate - b.climeRate});
       for(let i in this.data){
       Vue.set(this.data[i],'rate',Number(i)+1)
       }
+      this.$store.dispatch('setLoading',false)
     })
     .catch(e=>{
       console.log(e)
+      this.$store.dispatch('setLoading',false)
     })   
     }
   },
   mounted() {
+  this.$store.dispatch('setLoading',true)
   this.getdata()
   tim=setInterval(function() {this.getdata()}.bind(this),10000)    
   },
