@@ -11,6 +11,7 @@
 </template>
 <script>
 import axios from 'axios'
+import { ip } from '../../helpers/ip'
 export default {
     data() {
         return {
@@ -33,7 +34,7 @@ export default {
                 'bad':0,
                 'views':0,
             }
-            axios.post('http://127.0.0.1:5000/api/article/new',articleData)
+            axios.post(ip+'/api/article/new',articleData)
             .then(response=>{
                 console.log(response.data)
                 this.$router.push('/forum')

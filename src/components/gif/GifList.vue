@@ -43,6 +43,7 @@
 <script>
 import axios from 'axios'
 import Vue from 'vue'
+import { ip } from '../../helpers/ip'
 export default {
     data() {
         return {
@@ -51,7 +52,7 @@ export default {
     },
     methods: {
         artClick(id) {
-            axios.put('http://127.0.0.1:5000/api/gif/views/'+id)
+            axios.put(ip+'/api/gif/views/'+id)
             .then(response => { 
             })
             .catch(e => {
@@ -60,13 +61,16 @@ export default {
             this.$router.push('/Gif/'+id)
         }
     },
-    created() {
-        axios.get('http://127.0.0.1:5000/api/gif/page/1')
+    mounted() {
+        axios.get(ip+'/api/gif/page/1')
             .then(response => {
                 for(var r in response.data){
                     var temptime = new Date(response.data[r].last_update)
                     var temptime_hour = temptime.getUTCHours()
                     var temptime_min = temptime.getUTCMinutes()
+                    if(temptime_min == 0){
+                        temptime_min='00'
+                    }
                     var tt = temptime_hour+":"+temptime_min
                     if(response.data[r].comlist==null){
                     response.data[r].comCount=0

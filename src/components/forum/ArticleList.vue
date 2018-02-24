@@ -14,7 +14,7 @@
         <div style="flex:1">{{ article.articleNumber }}</div>
         <div style="flex:6;text-align:left" @click="artClick(article._id)">{{ article.title }} <span style="color:red">[{{ article.comCount }}]</span></div>        
         <div style="flex:1">{{ article.user_name }}</div> 
-        <div style="flex:0.7">{{ article.last_update }}</div>
+        <div style="flex:0.7">{{ article.update }}</div>
         <div style="flex:0.7">{{ article.views }}</div> 
         </div>
     </div>
@@ -43,6 +43,7 @@
 <script>
 import axios from 'axios'
 import Vue from 'vue'
+import { ip } from '../../helpers/ip'
 export default {
     data() {
         return {
@@ -57,24 +58,25 @@ export default {
             this.$router.push('/Forum/new')
         }
     },
-    created() {
-        axios.get('http://127.0.0.1:5000/api/article/page/1')
+    mounted() {
+        axios.get(ip+'/api/article/page/1')
             .then(response => {
-                for(var r in response.data){
-                    var temptime = new Date(response.data[r].last_update)
+                this.articles = response.data
+                for(var i in this.articles){
+                    var temptime = new Date(this.articles[i].last_update)
                     var temptime_hour = temptime.getUTCHours()
                     var temptime_min = temptime.getUTCMinutes()
-                    var tt = temptime_hour+":"+temptime_min
-                    if(response.data[r].comlist==null){
-                    response.data[r].comCount=0
-                    }else{
-                    response.data[r].comCount=Object.keys(response.data[r].comlist).length
+                    if(temptime_min == 0){
+                        temptime_min='00'
                     }
-                    response.data[r].last_update = tt
+                    var tt = temptime_hour+":"+temptime_min
+                    if(this.articles[i].comlist==null){
+                    Vue.set(this.articles[i],'comCount',0)
+                    }else{
+                    Vue.set(this.articles[i],'comCount',Object.keys(this.articles[i].comlist).length)
+                    }
+                    Vue.set(this.articles[i],'update',tt)
                 }        
-                for(var i in response.data){
-                    Vue.set(this.articles,i,response.data[i])
-                }
             })
             .catch(e => {
             console.log(e)

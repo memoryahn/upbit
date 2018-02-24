@@ -1,43 +1,43 @@
 <template>
-<div style="padding:1em">
 <div align="center">
-  <div class="flex" style="width:700px" >
+  <div class="flex" style="width:700px;margin-top:10px" >
     <div class="info">총코인 : 35</div>
-    <div class="info">+5% 코인 : {{ count }}</div>
+    <div class="info">+3% 코인 : {{ count }}</div>
     <div class="info">+ 코인 : {{ upcount }}</div>
   </div>
   <div style="width:700px;font-size:12px">
     <div class="flex">
-      <div class="title" style="flex:2">코드</div>
-      <div class="title" style="flex:1">이름</div>
+      <div class="title" style="flex:2">이름</div>
+      <div class="title" style="flex:0.5">코드</div>
       <div class="title" style="flex:1">OPEN 가격</div>
       <div class="title" style="flex:1">현재 가격</div>
       <div class="title" style="flex:1">상승률</div>
       <div class="title" style="flex:1">최고</div>
       <div class="title" style="flex:1">최저</div>
-      <div class="title" style="flex:1">순위</div>
+      <div class="title" style="flex:0.5">순위</div>
     </div>
-    <div id="dd" class="flex" style="font-size:10px" v-for="(d,i) in data" :key="i">
+    <div id="dd" class="flex" style="font-size:12px" v-for="(d,i) in data" :key="i">
       <div class="data" style="flex:2;color:red" align="left" v-if="i<=14">{{ d.name }}</div>
       <div class="data" style="flex:2" align="left" v-if="i>14">{{ d.name }}</div>
-      <div class="data" style="flex:1" >{{ d.code }}</div>
-      <div class="data" style="flex:1" align="right">{{ comma(d.open) }}</div>
+      <div class="data" style="flex:0.5" >{{ d.code }}</div>
+      <div class="data" style="flex:1" align="right">{{ comma(d.openingPrice) }}</div>
       <div class="data" style="flex:1" align="right">{{ comma(d.tradePrice) }}</div>
-      <div class="data" style="flex:1;color:red;" align="left" v-if="d.climeRate >= 0" >▲ {{ d.climeRate }}%</div>
-      <div class="data" style="flex:1;color:blue;" align="left" v-if="d.climeRate < 0" >▼ {{ d.climeRate }}%</div>
-      <div class="data" style="flex:1" >▲ +15%</div>
-      <div class="data" style="flex:1" >▼ -10%</div>
-      <div class="data" style="flex:1;color:red;" v-if="d.climeRate >= 5" >( {{ d.rate }} )</div>
-      <div class="data" style="flex:1;color:blue;" v-if="d.climeRate < 5" >( {{ d.rate }} )</div>
+      <div class="data" style="flex:1;color:red;"  v-if="d.climeRate >= 0" >▲ {{ d.climeRate }}%</div>
+      <div class="data" style="flex:1;color:blue;"  v-if="d.climeRate < 0" >▼ {{ d.climeRate }}%</div>
+      <div class="data" style="flex:1;color:red;" v-if="d.highRate >=5">{{ d.highRate }}%</div>
+      <div class="data" style="flex:1;" v-if="d.highRate <5">{{ d.highRate }}%</div>
+      <div class="data" style="flex:1" >{{ d.lowRate }}%</div>
+      <div class="data" style="flex:0.5;color:red;" v-if="d.climeRate >= 3" >( {{ d.rate }} )</div>
+      <div class="data" style="flex:0.5;color:blue;" v-if="d.climeRate < 3" >( {{ d.rate }} )</div>
     </div>
   </div>
 </div> 
-</div>
 </template>
 <script>
 import axios from 'axios'
 import Vue from 'vue'
-
+import { ip } from '../helpers/ip'
+var tim
 
 export default {
   data() {
@@ -62,42 +62,24 @@ export default {
     stop() {
     },
     getdata() {
-       axios.get('http://127.0.0.1:5000')
-    .then(response=>{
-      console.log('connect')
-      this.data1=response.data
-
-    })
-    .catch(e=>{
-      console.log(e)
-    })
-      
-    }
-  },
-  created() {
-    axios.get('http://127.0.0.1:5000/api/open')
+      axios.get(ip+'/api/open')
     .then(response=>{
       console.log('connect')
       this.data=response.data
-      axios.get('http://127.0.0.1:5000')
-    .then(response=>{
-      console.log('connect2')
       this.count=0
       this.upcount=0
       for(let i in this.data){
-        for(let k in response.data){
-        if(this.data[i].code==response.data[k].code){
-          this.data[i].tradePrice=response.data[k].tradePrice
-          Vue.set(this.data[i],'climeRate',(((this.data[i].tradePrice-this.data[i].open)/this.data[i].open)*100).toFixed(2))
-          if(this.data[i].climeRate>=5){
+          Vue.set(this.data[i],'climeRate',(((this.data[i].tradePrice-this.data[i].openingPrice)/this.data[i].openingPrice)*100).toFixed(2))
+          Vue.set(this.data[i],'highRate',(((this.data[i].highPrice-this.data[i].openingPrice)/this.data[i].openingPrice)*100).toFixed(2))
+          Vue.set(this.data[i],'lowRate',(((this.data[i].lowPrice-this.data[i].openingPrice)/this.data[i].openingPrice)*100).toFixed(2))
+          if(this.data[i].climeRate>=3){
             this.count++
           }
           if(this.data[i].climeRate>=0){
             this.upcount++
           }
-        }
-        }
       }
+      
       this.data.sort(function(b, a){return a.climeRate - b.climeRate});
       for(let i in this.data){
       Vue.set(this.data[i],'rate',Number(i)+1)
@@ -105,19 +87,18 @@ export default {
     })
     .catch(e=>{
       console.log(e)
-    })
-      // for(let i in this.data){
-      //   this.data[i].open=addCommas(this.data[i].open)
-      // }
-    })
-    .catch(e=>{
-      console.log(e)
-    })
-
-    
-    
+    })   
+    }
+  },
+  mounted() {
+  this.getdata()
+  tim=setInterval(function() {this.getdata()}.bind(this),10000)    
+  },
+  destroyed() {
+    clearInterval(tim)
   }
 }
+
 </script>
 <style>
 .flex {

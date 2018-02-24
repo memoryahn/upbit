@@ -37,7 +37,7 @@
 <script>
 import axios from 'axios'
 import Vue from 'vue'
-
+import { ip } from '../../helpers/ip'
 export default {
     props:['id'],
     data() {
@@ -49,8 +49,8 @@ export default {
             combody:null,
         }
     },
-    created() {
-        axios.get('http://127.0.0.1:5000/api/article/id/'+this.id)
+    mounted() {
+        axios.get(ip+'/api/article/id/'+this.id)
         .then(response=>{
             this.article=response.data
         })
@@ -71,10 +71,10 @@ export default {
                 'userId':null,'password':this.password,'body':this.combody}
             }
             if(this.user || (this.password!=null && this.name!=null)){
-                axios.put('http://127.0.0.1:5000/api/article/addcom/'+this.article._id,{'comData':comData}
+                axios.put(ip+'/api/article/addcom/'+this.article._id,{'comData':comData}
                 )
                     .then(res => {
-                        axios.get('http://127.0.0.1:5000/api/article/id/'+this.id)
+                        axios.get(ip+'/api/article/id/'+this.id)
                         .then(response=>{
                                 this.article=response.data
                         })

@@ -8,7 +8,7 @@ import GifList from '@/components/gif/GifList'
 import Gif from '@/components/gif/Gif'
 import Auth from '@/components/login/Auth'
 import Profile from '@/components/login/Profile'
-
+import Pair from '@/components/Pair'
 
 Vue.use(Router)
 
@@ -20,6 +20,12 @@ export default new Router({
       name: 'Home',
       component: Home
     },
+    {
+      path: '/Pair',
+      name: 'Pair',
+      component: Pair
+    },
+    
     {
       path: '/Forum',
       name: 'ArticleList',
