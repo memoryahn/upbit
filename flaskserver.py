@@ -152,7 +152,6 @@ def get_data():
         count=count+1
     tempdate = data[0]['candleDateTimeKst'].replace("+09:00","")
     d =datetime.strptime(tempdate ,'%Y-%m-%dT%H:%M:%S')
-    print(d.hour)
     return jsonify(data)
 
 @app.route('/api/open',methods=['GET'])
