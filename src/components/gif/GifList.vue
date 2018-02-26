@@ -2,34 +2,33 @@
 <div align="center">
     <div style="width:700px">
         <div style="margin-top:10px;font-size:14px" class="flex border">
-        <div style="flex:1">Num</div>
-        <div style="flex:6">Title</div>        
-        <div style="flex:1">Author</div> 
-        <div style="flex:0.7">Date</div>
-        <div style="flex:0.7">Views</div> 
+        <div style="flex:1">번호</div>
+        <div style="flex:6">제목</div>        
+        <div style="flex:1">글쓴이</div> 
+        <div style="flex:0.7">날짜</div>
+        <div style="flex:0.7">조회수</div> 
         </div>
     </div>
     <div style="width:700px;font-size:12px">
         <div id="list" class="flex border" v-for="gif in gifs" :key="gif._id">
         <div style="flex:1">{{ gif.count }}</div>
-        <div style="flex:6;text-align:left" @click="artClick(gif._id)">{{ gif.title }} <span style="color:red" v-if="gif.comCount > 0">[{{ gif.comCount }}]</span></div>        
+        <div class="cursor" style="flex:6;text-align:left" @click="artClick(gif._id)">{{ gif.title }} <span style="color:red" v-if="gif.comCount > 0">[{{ gif.comCount }}]</span></div>        
         <div style="flex:1">{{ gif.author }}</div> 
         <div style="flex:0.7">{{ gif.last_update }}</div>
         <div style="flex:0.7">{{ gif.views }}</div> 
         </div>
     </div>
-    <div style="width:600px">
+    <div style="width:700px">
         <div style="margin-top:10px;font-size:13px" class="flex">
-        <div style="flex:2" @click="pre"> ◀ Prev</div>
-        <div @click="pageClick(i)" :id="i" style="flex:1" v-for="i in page" :key="i">{{ i }}</div>
-        <div style="flex:2" @click="next">Next ▶</div>
+        <div class="cursor" style="flex:1;margin-top:7px;" @click="pre">Prev</div>
+        <div class="cursor" @click="pageClick(i)" :id="i" style="flex:1;margin-top:7px;margin-left:5px;margin-right:5px" v-for="i in page" :key="i">{{ i }}</div>
+        <div class="cursor" style="flex:1;margin-right:20px;margin-top:7px;" @click="next">Next</div>
+        <button class="btn bggray" style="flex:1">새글</button>
         </div>
     </div>
     <div style="width:700px;margin-top:10px;justify-content: flex-end" class="flex">
         <div style="flex-grow:8"></div>
-        <div style="flex:2">search</div>
-        <div style="flex-grow:4"></div>
-        <div style="flex:2">new</div>
+        <div align="right" style="flex:2">검색</div>
     </div>
 </div>
 </template>
@@ -87,6 +86,7 @@ export default {
                 for(var i in response.data){
                     Vue.set(this.gifs,i,response.data[i])
                 }
+                
             })
             .catch(e => {
             console.log(e)
@@ -103,10 +103,14 @@ export default {
                     var temptime = new Date(response.data[r].last_update)
                     var temptime_hour = temptime.getUTCHours()
                     var temptime_min = temptime.getUTCMinutes()
+                    var temptime_sec = temptime.getUTCSeconds()
                     if(temptime_min == 0){
                         temptime_min='00'
                     }
-                    var tt = temptime_hour+":"+temptime_min
+                    if(temptime_sec == 0){
+                        temptime_sec='00'
+                    }
+                    var tt = temptime_hour+":"+temptime_min+":"+temptime_sec
                     if(response.data[r].comlist==null){
                     response.data[r].comCount=0
                     }else{
@@ -126,7 +130,7 @@ export default {
 </script>
 <style scoped>
 #list:nth-child(odd) {
-    background: #eee
+    background: #fafafa
 }
 .flex {
     display:flex;
@@ -136,6 +140,6 @@ export default {
 }
 .border {
     border-bottom:1px solid lightgray;
-    padding: 5px
+    padding: 5px;
 }
 </style>

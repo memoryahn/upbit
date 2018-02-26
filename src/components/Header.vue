@@ -1,11 +1,13 @@
 <template>
 <div align="center" >
+    <div style="background: lightslategrey;">
     <div class="flex" style="width:700px">
         <div @click="upbit">UPBIT</div>
         <div @click="gif">GIF</div>
         <!-- <div @click="forum">FORUM</div> -->
         <div style="flex-grow:5"></div>
         <!-- <div @click="login">LOGIN</div> -->
+    </div>
     </div>    
 </div>
 </template>
@@ -40,7 +42,6 @@ export default {
     background: gray;
 }
 .flex div{
-    border:1px solid lightgray;
     background:lightslategrey;
     color: lightgray;
     font-size:20px;
@@ -48,7 +49,7 @@ export default {
     padding:10px
 }
 .flex div:hover {
-    cursor:context-menu;
+    cursor: pointer;
     color:black;
 }
 </style>
