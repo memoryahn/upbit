@@ -1,7 +1,7 @@
 <template>
 <div align="center">
     <div style="width:700px">
-        <div style="margin-top:10px;font-size:12px" class="flex">
+        <div style="margin-top:10px;font-size:14px" class="flex border">
         <div style="flex:1">Num</div>
         <div style="flex:6">Title</div>        
         <div style="flex:1">Author</div> 
@@ -10,7 +10,7 @@
         </div>
     </div>
     <div style="width:700px;font-size:12px">
-        <div id="list" class="flex" v-for="gif in gifs" :key="gif._id">
+        <div id="list" class="flex border" v-for="gif in gifs" :key="gif._id">
         <div style="flex:1">{{ gif.count }}</div>
         <div style="flex:6;text-align:left" @click="artClick(gif._id)">{{ gif.title }} <span style="color:red" v-if="gif.comCount > 0">[{{ gif.comCount }}]</span></div>        
         <div style="flex:1">{{ gif.author }}</div> 
@@ -18,11 +18,11 @@
         <div style="flex:0.7">{{ gif.views }}</div> 
         </div>
     </div>
-    <div style="width:700px">
+    <div style="width:600px">
         <div style="margin-top:10px;font-size:13px" class="flex">
-        <div style="flex:1" @click="pre"> ◀ </div>
+        <div style="flex:2" @click="pre"> ◀ Prev</div>
         <div @click="pageClick(i)" :id="i" style="flex:1" v-for="i in page" :key="i">{{ i }}</div>
-        <div style="flex:1" @click="next">▶</div>
+        <div style="flex:2" @click="next">Next ▶</div>
         </div>
     </div>
     <div style="width:700px;margin-top:10px;justify-content: flex-end" class="flex">
@@ -124,15 +124,18 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 #list:nth-child(odd) {
     background: #eee
 }
 .flex {
     display:flex;
 }
-.flex div {
-    border: 1px solid lightgray;
+.padding {
+    padding: 5px
+}
+.border {
+    border-bottom:1px solid lightgray;
     padding: 5px
 }
 </style>

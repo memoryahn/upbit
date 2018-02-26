@@ -2,21 +2,19 @@ import urllib.request
 from bs4 import BeautifulSoup
 # from firebase_admin import db
 import re
-import datetime
+from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
 # Use a service account
-cred = credentials.Certificate('path/to/serviceAccount.json')
+cred = credentials.Certificate('./upbitapp-firebase.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-doc_ref = db.collection('upbit').document('gif')
-doc_ref.set({
-    'title': '첫번째 타이틀',
-    'src': '주소주소',
-})
+docs = db.collection('upbit').get()
+for doc in docs:
+    print('{} => {}'.format(doc.id, doc.to_dict()))
 
 
 
